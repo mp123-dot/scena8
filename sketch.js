@@ -214,7 +214,7 @@ function drawDalejButton() {
   let d = over ? BTN_DIAMETER * HOVER_SCALE : BTN_DIAMETER;
   push();
     imageMode(CENTER);
-    image(dalejImg, width/2, height - 80, d, d);
+    image(dalejImg, width/2, height/2, d, d);
   pop();
 }
 
