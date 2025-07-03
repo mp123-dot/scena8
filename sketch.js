@@ -100,9 +100,9 @@ function draw() {
       drawMaskedCamera();
       drawFaceOverlay();
     }
-    // po zakończeniu ładowania: wyświetlamy komunikat + przycisk
+    // po zakończeniu ładowania: wyświetlamy przycisk
     if (showDalej) {
-      drawCenteredMessageAboveButton("Niech będzie to."); // ** raz, na środku **
+      // * raz, na środku *
       drawDalejButton();
     }
   }
@@ -128,8 +128,8 @@ function takeSnapshot() {
   }
 
   if (snapCount === 6) {
-    // ** ustawiamy komunikat dopiero tutaj przed ładowaniem **
-    messageText = ".";
+    // * ustawiamy komunikat dopiero tutaj przed ładowaniem *
+    messageText = "Niech będzie to.";
     speak(messageText);
     loading = true;
   } else {
