@@ -94,17 +94,17 @@ function draw() {
   if (loading) {
     drawLoadingScreen();
   } 
- else {
-  if (showDalej) {
-    // tylko tło + przycisk
-    imageMode(CORNER);
-    image(selfieBg2, 0, 0, width, height);
-    drawDalejButton();
-  } else if (snapCount < 6) {
-    drawMaskedCamera();
-    drawFaceOverlay();
+  else {
+    if (showDalej) {
+      // tylko tło + przycisk
+      imageMode(CORNER);
+      image(selfieBg2, 0, 0, width, height);
+      drawDalejButton();
+    } else if (snapCount < 6) {
+      drawMaskedCamera();
+      drawFaceOverlay();
+    }
   }
-}
   // --- BROKAT ---
   drawGlitter();
 
@@ -118,9 +118,6 @@ function takeSnapshot() {
   snapshot = video.get();
   captureReady = false;
   snapImageButton.hide();
-
-
-  
 
   if (snapCount === 3) {
     // * ustawiamy komunikat dopiero tutaj przed ładowaniem *
@@ -225,13 +222,13 @@ function mousePressed() {
         color: color(random(180,255), random(120,200), random(200,255),200)
       });
     }
-    
-    // ⏩ Przejście do sceny 9 po kliknięciu przycisku „DALEJ”
+    // Przejście do sceny 9 po kliknięciu przycisku „DALEJ”
     setTimeout(() => {
       window.location.href = "https://mp123-dot.github.io/scena9/";
     }, 1000); // małe opóźnienie, żeby brokat był widoczny
   }
 }
+
 function drawGlitter() {
   for (let i = glitter.length - 1; i >= 0; i--) {
     let g = glitter[i];
