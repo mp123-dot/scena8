@@ -34,9 +34,8 @@ let messages = [
   "To chyba nie jest Twój korzystny profil? Co? Jeszcze raz!",
 ];
 
-let messageText = ""; // Dodane: przechowuje aktualny komunikat
-
 function preload() {
+  // Wczytujemy obrazy, font i dźwięki
   selfieBg     = loadImage("t.selfie.png");
   selfieBg2    = loadImage("t.selfie2.png");
   rawDalejImg  = loadImage("PrzyciskDALEJ.png");
@@ -57,10 +56,18 @@ function setup() {
 
   // --- PRZYCISK „PSTRYK” ---
   snapImageButton = createImg("PrzyciskPSTRYK.png", "Pstryk");
-  snapImageButton.size(160, 80);
-  snapImageButton.position(windowWidth/2 - 80, windowHeight - 100);
-  snapImageButton.mousePressed(takeSnapshot);
-  snapImageButton.style("cursor","pointer");
+  const btnDiameter = BTN_DIAMETER;
+snapImageButton = createImg("PrzyciskPSTRYK.png", "Pstryk");
+snapImageButton.size(btnDiameter, btnDiameter);
+
+// Ustaw pozycję taką samą jak przycisk „DALEJ”
+snapImageButton.position(windowWidth / 2 - btnDiameter / 2, windowHeight - 80 - btnDiameter / 2);
+
+snapImageButton.style("border-radius", "50%");
+snapImageButton.style("object-fit", "cover");
+snapImageButton.style("cursor", "pointer");
+snapImageButton.style("position", "absolute");
+snapImageButton.mousePressed(takeSnapshot);
 
   // --- PRZYGOTUJ OKRĄGŁY OBRAZEK „DALEJ” Z MASKĄ ---
   const s = min(rawDalejImg.width, rawDalejImg.height);
@@ -82,30 +89,34 @@ function setup() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   video.size(windowWidth, windowHeight);
+  // przestaw przycisk w dół środka nowego ekranu:
   snapImageButton.position(windowWidth/2 - 80, windowHeight - 100);
 }
 
 function draw() {
+  // --- TŁO (SELFIE BG) ---
   imageMode(CORNER);
   image(snapCount >= 6 ? selfieBg2 : selfieBg, 0, 0, width, height);
 
+  // --- EKRAN ŁADOWANIA (WYŁĄCZNIE PASEK) ---
   if (loading) {
     drawLoadingScreen();
-  } else {
+  } 
+  else {
     if (showDalej) {
+      // tylko tło + przycisk
       imageMode(CORNER);
       image(selfieBg2, 0, 0, width, height);
-      drawCenteredMessageAboveButton("Niech będzie to.");
       drawDalejButton();
     } else if (snapCount < 6) {
       drawMaskedCamera();
       drawFaceOverlay();
-      if (messageText) drawCenteredMessageAboveButton(messageText);
     }
   }
-
+  // --- BROKAT ---
   drawGlitter();
 
+  // --- KURSOR jako kwiatek ---
   imageMode(CENTER);
   image(flowerMouse, mouseX, mouseY, 32, 32);
 }
@@ -117,10 +128,12 @@ function takeSnapshot() {
   snapImageButton.hide();
 
   if (snapCount === 3) {
+    // * ustawiamy komunikat dopiero tutaj przed ładowaniem *
     messageText = "Niech będzie to.";
     speak(messageText);
     loading = true;
   } else {
+    // komunikaty losowe po każdym pstryknięciu
     messageText = random(messages);
     speak(messageText);
     messageSide = !messageSide;
@@ -137,6 +150,7 @@ function drawMaskedCamera() {
   let camImg = captureReady ? video.get() : snapshot;
   if (!camImg) return;
 
+  // rysujemy do off-screen grafiki i maskujemy elipsą
   let g = createGraphics(w, h);
   g.imageMode(CENTER);
   g.image(camImg, w/2, h/2, w, h);
@@ -169,8 +183,10 @@ function drawLoadingScreen() {
   textAlign(CENTER, CENTER);
   text("Sprawdzanie Twojej kobiecości", width/2, height/2 - 80);
 
+  // obrys paska
   stroke(0); noFill();
   rect(width/2 - 200, height/2, 400, 30);
+  // wypełnienie
   noStroke(); fill(0);
   rect(width/2 - 200, height/2, loadingProgress * 4, 30);
 
@@ -180,7 +196,7 @@ function drawLoadingScreen() {
     loadingProgress = 0;
     captureReady = false;
     snapImageButton.hide();
-    showDalej = true;
+    showDalej = true;  // od teraz w draw() rysujemy DALEJ + komunikat
   }
 }
 
@@ -188,7 +204,8 @@ function drawCenteredMessageAboveButton(txt) {
   fill(0);
   textSize(28);
   textAlign(CENTER, CENTER);
-  let y = height - 80 - BTN_DIAMETER/2 - 40;
+  // 20px nad środkiem przycisku
+  let y = height - 80 - BTN_DIAMETER/2 - 20;
   text(txt, width/2, y);
 }
 
@@ -213,9 +230,10 @@ function mousePressed() {
         color: color(random(180,255), random(120,200), random(200,255),200)
       });
     }
+    // Przejście do sceny 9 po kliknięciu przycisku „DALEJ”
     setTimeout(() => {
       window.location.href = "https://mp123-dot.github.io/scena9/";
-    }, 1000);
+    }, 1000); // małe opóźnienie, żeby brokat był widoczny
   }
 }
 
