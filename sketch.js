@@ -45,19 +45,19 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(1040, 620);
+  createCanvas(windowWidth, windowHeight);
   textFont(futuraFont);
   noCursor();
 
   // --- KAMERA VIDEO ---
   video = createCapture(VIDEO);
-  video.size(width, height);
+  video.size(windowWidth, windowHeight);
   video.hide();
 
   // --- PRZYCISK „PSTRYK” ---
   snapImageButton = createImg("PrzyciskPSTRYK.png", "Pstryk");
   snapImageButton.size(160, 80);
-  snapImageButton.position(width/2 - 80, height - 100);
+  snapImageButton.position(windowWidth/2 - 80, windowHeight - 100);
   snapImageButton.mousePressed(takeSnapshot);
   snapImageButton.style("cursor","pointer");
 
@@ -78,6 +78,13 @@ function setup() {
   dalejImg.mask(maskG);
 }
 
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  video.size(windowWidth, windowHeight);
+  // przestaw przycisk w dół środka nowego ekranu:
+  snapImageButton.position(windowWidth/2 - 80, windowHeight - 100);
+}
+
 function draw() {
   // --- TŁO (SELFIE BG) ---
   imageMode(CORNER);
@@ -88,8 +95,8 @@ function draw() {
     drawLoadingScreen();
   } 
   else {
-    // dopóki <3: pokazujemy kamerę + ring
-    if (snapCount < 3) {
+    // dopóki <6: pokazujemy kamerę + ring
+    if (snapCount < 6) {
       drawMaskedCamera();
       drawFaceOverlay();
     }
@@ -114,21 +121,28 @@ function takeSnapshot() {
   captureReady = false;
   snapImageButton.hide();
 
-  // PO 3 PSTRYKACH PRZENIEŚ UŻYTKOWNIKA DO LINKU
-  if (snapCount >= 3) {
+  // PO 3 PSTRYKACH przejdź do scena9
+  if (snapCount === 3) {
     window.location.href = "https://mp123-dot.github.io/scena9/";
     return;
   }
 
-  // komunikaty losowe po każdym pstryknięciu
-  messageText = random(messages);
-  speak(messageText);
-  messageSide = !messageSide;
-  setTimeout(() => {
-    captureReady = true;
-    snapImageButton.show();
-    messageText = "";
-  }, 2000);
+  if (snapCount === 6) {
+    // ** ustawiamy komunikat dopiero tutaj przed ładowaniem **
+    messageText = ".";
+    speak(messageText);
+    loading = true;
+  } else {
+    // komunikaty losowe po każdym pstryknięciu
+    messageText = random(messages);
+    speak(messageText);
+    messageSide = !messageSide;
+    setTimeout(() => {
+      captureReady = true;
+      snapImageButton.show();
+      messageText = "";
+    }, 2000);
+  }
 }
 
 function drawMaskedCamera() {
