@@ -94,19 +94,17 @@ function draw() {
   if (loading) {
     drawLoadingScreen();
   } 
-  else {
-    // dopóki <6: pokazujemy kamerę + ring
-    if (snapCount < 6) {
-      drawMaskedCamera();
-      drawFaceOverlay();
-    }
-    // po zakończeniu ładowania: wyświetlamy przycisk
-    if (showDalej) {
-      // * raz, na środku *
-      drawDalejButton();
-    }
+ else {
+  if (showDalej) {
+    // tylko tło + przycisk
+    imageMode(CORNER);
+    image(selfieBg2, 0, 0, width, height);
+    drawDalejButton();
+  } else if (snapCount < 6) {
+    drawMaskedCamera();
+    drawFaceOverlay();
   }
-
+}
   // --- BROKAT ---
   drawGlitter();
 
@@ -121,13 +119,10 @@ function takeSnapshot() {
   captureReady = false;
   snapImageButton.hide();
 
-  // PO 3 PSTRYKACH przejdź do scena9
-  if (snapCount === 3) {
-    window.location.href = "https://mp123-dot.github.io/scena9/";
-    return;
-  }
 
-  if (snapCount === 6) {
+  
+
+  if (snapCount === 3) {
     // * ustawiamy komunikat dopiero tutaj przed ładowaniem *
     messageText = "Niech będzie to.";
     speak(messageText);
@@ -230,9 +225,13 @@ function mousePressed() {
         color: color(random(180,255), random(120,200), random(200,255),200)
       });
     }
+    
+    // ⏩ Przejście do sceny 9 po kliknięciu przycisku „DALEJ”
+    setTimeout(() => {
+      window.location.href = "https://mp123-dot.github.io/scena9/";
+    }, 1000); // małe opóźnienie, żeby brokat był widoczny
   }
 }
-
 function drawGlitter() {
   for (let i = glitter.length - 1; i >= 0; i--) {
     let g = glitter[i];
