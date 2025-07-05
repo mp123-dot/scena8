@@ -102,8 +102,8 @@ function draw() {
     } else if (snapCount < 6) {
       drawMaskedCamera();
       drawFaceOverlay();
-      // NIE wyświetlaj messageText jeśli to tekst z messages
-      if (messageText && messageText === "Niech będzie to.") {
+      // Wyświetl tylko tekst końcowy, nie losowe komunikaty
+      if (messageText === "Niech będzie to.") {
         drawCenteredMessageAboveButton(messageText);
       }
     }
@@ -126,8 +126,9 @@ function takeSnapshot() {
     speak(messageText);
     loading = true;
   } else {
+    // Losowy komunikat tylko czytany, nie wyświetlany
     let msg = random(messages);
-    messageText = ""; // nie wyświetlaj na ekranie!
+    messageText = ""; // nie pokazuj na ekranie
     speak(msg);
     messageSide = !messageSide;
     setTimeout(() => {
@@ -194,12 +195,12 @@ function drawCenteredMessageAboveButton(txt) {
   fill(0);
   textSize(28);
   textAlign(CENTER, CENTER);
-  // 20px nad środkiem przycisku
   let y = height / 2 - BTN_DIAMETER;
   text(txt, width/2, y);
 }
 
 function drawDalejButton() {
+  // Przycisk Dalej zawsze na środku ekranu
   let over = dist(mouseX, mouseY, width/2, height/2) < BTN_DIAMETER/2;
   let d = over ? BTN_DIAMETER * HOVER_SCALE : BTN_DIAMETER;
   push();
@@ -209,7 +210,7 @@ function drawDalejButton() {
 }
 
 function mousePressed() {
-  // Sprawdź czy kliknięto w przycisk DALEJ (środek ekranu)
+  // Kliknięcie w środek ekranu na przycisk Dalej
   if (showDalej && dist(mouseX, mouseY, width/2, height/2) < BTN_DIAMETER/2) {
     if (glimmerSound && glimmerSound.isLoaded()) glimmerSound.play();
     for (let i = 0; i < 18; i++) {
