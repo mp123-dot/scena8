@@ -102,7 +102,10 @@ function draw() {
     } else if (snapCount < 6) {
       drawMaskedCamera();
       drawFaceOverlay();
-      if (messageText) drawCenteredMessageAboveButton(messageText);
+      // NIE wyświetlaj messageText jeśli to tekst z messages
+      if (messageText && messageText === "Niech będzie to.") {
+        drawCenteredMessageAboveButton(messageText);
+      }
     }
   }
 
@@ -123,8 +126,9 @@ function takeSnapshot() {
     speak(messageText);
     loading = true;
   } else {
-    messageText = random(messages);
-    speak(messageText);
+    let msg = random(messages);
+    messageText = ""; // nie wyświetlaj na ekranie!
+    speak(msg);
     messageSide = !messageSide;
     setTimeout(() => {
       captureReady = true;
