@@ -205,8 +205,9 @@ function drawDalejButton() {
 }
 
 function mousePressed() {
+  // Sprawdź czy kliknięto w przycisk DALEJ
   if (showDalej && dist(mouseX, mouseY, width/2, height - 80) < BTN_DIAMETER/2) {
-    if (glimmerSound.isLoaded()) glimmerSound.play();
+    if (glimmerSound && glimmerSound.isLoaded()) glimmerSound.play();
     for (let i = 0; i < 18; i++) {
       glitter.push({
         x: mouseX, y: mouseY,
@@ -219,7 +220,7 @@ function mousePressed() {
     // Przeniesienie do scena9 po kliknięciu przycisku DALEJ
     setTimeout(() => {
       window.location.href = "https://mp123-dot.github.io/scena9/";
-    }, 1000);
+    }, 400); // krótkie opóźnienie na efekt brokatu
   }
 }
 
@@ -237,4 +238,4 @@ function drawGlitter() {
 
 function speak(txt) {
   let u = new SpeechSynthesisUtterance(txt);
-  u.lang = txt.toLowerCase().includes("#ugly") ? "en-US" : "pl-PL";
+  u.lang = txt.toLowerCase().includes("#ugly") ? "en-US" : "pl-
