@@ -191,22 +191,22 @@ function drawCenteredMessageAboveButton(txt) {
   textSize(28);
   textAlign(CENTER, CENTER);
   // 20px nad środkiem przycisku
-  let y = height - 80 - BTN_DIAMETER/2 - 20;
+  let y = height / 2 - BTN_DIAMETER;
   text(txt, width/2, y);
 }
 
 function drawDalejButton() {
-  let over = dist(mouseX, mouseY, width/2, height - 80) < BTN_DIAMETER/2;
+  let over = dist(mouseX, mouseY, width/2, height/2) < BTN_DIAMETER/2;
   let d = over ? BTN_DIAMETER * HOVER_SCALE : BTN_DIAMETER;
   push();
     imageMode(CENTER);
-    image(dalejImg, width/2, height - 80, d, d);
+    image(dalejImg, width/2, height/2, d, d);
   pop();
 }
 
 function mousePressed() {
-  // Sprawdź czy kliknięto w przycisk DALEJ
-  if (showDalej && dist(mouseX, mouseY, width/2, height - 80) < BTN_DIAMETER/2) {
+  // Sprawdź czy kliknięto w przycisk DALEJ (środek ekranu)
+  if (showDalej && dist(mouseX, mouseY, width/2, height/2) < BTN_DIAMETER/2) {
     if (glimmerSound && glimmerSound.isLoaded()) glimmerSound.play();
     for (let i = 0; i < 18; i++) {
       glitter.push({
@@ -217,10 +217,9 @@ function mousePressed() {
         color: color(random(180,255), random(120,200), random(200,255),200)
       });
     }
-    // Przeniesienie do scena9 po kliknięciu przycisku DALEJ
     setTimeout(() => {
       window.location.href = "https://mp123-dot.github.io/scena9/";
-    }, 400); // krótkie opóźnienie na efekt brokatu
+    }, 400);
   }
 }
 
