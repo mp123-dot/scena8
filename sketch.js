@@ -238,4 +238,6 @@ function drawGlitter() {
 
 function speak(txt) {
   let u = new SpeechSynthesisUtterance(txt);
-  u.lang = txt.toLowerCase().includes("#ugly") ? "en-US" : "pl-
+  u.lang = txt.toLowerCase().includes("#ugly") ? "en-US" : "pl-PL";
+  speechSynthesis.speak(u);
+}
